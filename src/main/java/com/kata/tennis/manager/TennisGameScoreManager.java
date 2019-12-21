@@ -24,6 +24,15 @@ public class TennisGameScoreManager implements ITennisGameScoreManager {
 			return StringUtils.defaultString(translateScore(this.player1GameScore) + " - " + translateScore(this.player2GameScore)) + "\n" + winner.getName() + " win the game";
 		}
 
+		if (isDEUCE()) {
+			return StringUtils.defaultString("DEUCE - DEUCE");
+		}
+
+		if (IsADV()) {
+			return this.player1GameScore > this.player2GameScore ? StringUtils.defaultString("ADV - 40")
+					: StringUtils.defaultString("40 - ADV");
+		}
+
 		return StringUtils.defaultString(translateScore(this.player1GameScore) + " - " + translateScore(this.player2GameScore));
 	}
 
@@ -37,7 +46,17 @@ public class TennisGameScoreManager implements ITennisGameScoreManager {
 
 	private boolean hasWinner() {
 
-		return (this.player1GameScore >= 4 || this.player2GameScore >= 4);
+		return (this.player1GameScore >= 4 && this.player1GameScore >= this.player2GameScore + 2
+				|| this.player2GameScore >= 4 && this.player2GameScore >= this.player1GameScore + 2);
+	}
+
+	private boolean IsADV() {
+		return (this.player1GameScore >= 4 && this.player1GameScore == this.player2GameScore + 1)
+				|| (this.player2GameScore >= 4 && this.player2GameScore == this.player1GameScore + 1);
+	}
+
+	private boolean isDEUCE() {
+		return this.player1GameScore >= 4 && this.player1GameScore == this.player2GameScore;
 	}
 
 	private TennisPlayer getWinner() {

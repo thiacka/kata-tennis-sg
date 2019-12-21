@@ -103,7 +103,7 @@ public class TennisGameScoreManagerTest {
 		assertEquals("40 - 40", score);
 	}
 
-	@DisplayName("Player 1 wins 3 points and Player 2 wins 4 points and Win the Game")
+	@DisplayName("ADV rule : Player 1 wins 3 points and Player 2 wins 4 points and get ADV")
 	@Test
 	public void testPlayer1Wins2tBallAndPlayer2Wins4Ball()
 	{
@@ -117,6 +117,63 @@ public class TennisGameScoreManagerTest {
 
 		final String score = scoreManager.getScore();
 
-		assertEquals("0 - 0\nPlayer 2 win the game", score);
+		assertEquals("40 - ADV", score);
+	}
+
+	@DisplayName("DEUCE rule: Player 1 wins 4 points and Player 2 wins 4 point")
+	@Test
+	public void testPlayer1Wins4BallAndPlayer2Wins4Ball()
+	{
+		scoreManager.player1Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player1Win1Point();
+
+		final String score = scoreManager.getScore();
+
+		assertEquals("DEUCE - DEUCE", score);
+	}
+
+	@DisplayName("Player 1 wins 5 points and get ADV and Player 2 wins 4 point")
+	@Test
+	public void testPlayer1Wins5BallAndPlayer2Wins4Ball()
+	{
+		scoreManager.player1Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player1Win1Point();
+
+		final String score = scoreManager.getScore();
+
+		assertEquals("ADV - 40", score);
+	}
+
+	@DisplayName("Player 1 wins 6 points and Player 2 wins 4 point")
+	@Test
+	public void testPlayer1Wins6BallAndPlayer2Wins4Ball()
+	{
+		scoreManager.player1Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player1Win1Point();
+
+		final String score = scoreManager.getScore();
+
+		assertEquals("0 - 0\nPlayer 1 win the game", score);
 	}
 }
