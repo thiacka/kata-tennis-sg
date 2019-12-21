@@ -268,4 +268,72 @@ public class TennisGameScoreManagerTest {
 
 		assertEquals("Game Score -> 0 - 0 | Set Score -> 1 - 6\nPlayer 2 wins the set", score);
 	}
+
+
+	@DisplayName("TieBreak rule: Player 1 wins 6 Set and Player 2 wins 6 Set")
+	@Test
+	public void testPlayer1Wins6SetAndPlayer2Wins6Set()
+	{
+
+		scoreManager.setSetScores(6, 6);
+
+		final String score = scoreManager.getScore();
+
+		assertEquals("Game Score -> 0 - 0 | Set Score -> 6 - 6", score);
+	}
+
+
+	@DisplayName("TieBreak rule: Player 1 wins 6 Set + 1 point and Player 2 wins 6 Set")
+	@Test
+	public void testPlayer1Wins6SetAnd1BallAndPlayer2Wins6Set()
+	{
+
+		scoreManager.setSetScores(6, 6);
+		scoreManager.player1Win1Point();
+
+		final String score = scoreManager.getScore();
+
+		assertEquals("Game Score -> 0 - 0 | Set Score -> 6 - 6 | Tie Break score -> 1 - 0", score);
+	}
+
+	@DisplayName("TieBreak rule: Player 1 wins 6 Set + 6 points and Player 2 wins 6 Set + 6 points ")
+	@Test
+	public void testPlayer1Wins6SetAnd6BallAndPlayer2Wins6SetAnd2Ball()
+	{
+
+		scoreManager.setSetScores(6, 6);
+		scoreManager.player1Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player1Win1Point();
+
+		final String score = scoreManager.getScore();
+
+		assertEquals("Game Score -> 0 - 0 | Set Score -> 6 - 6 | Tie Break score -> 6 - 2", score);
+	}
+
+	@DisplayName("TieBreak rule: Player 1 wins 6 Set + 7 points and Player 2 wins 6 Set + 2 points")
+	@Test
+	public void testPlayer1Wins6SetAnd7BallAndPlayer2Wins6SetAnd2Ball()
+	{
+
+		scoreManager.setSetScores(6, 6);
+		scoreManager.player1Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player2Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player1Win1Point();
+		scoreManager.player1Win1Point();
+
+		final String score = scoreManager.getScore();
+
+		assertEquals("Game Score -> 0 - 0 | Set Score -> 7 - 6 | Tie Break score -> 0 - 0\nPlayer 1 wins the set", score);
+	}
 }

@@ -12,6 +12,16 @@ public class ScoreUtils {
 						+ " | Set Score -> " + player1SetScore + " - " + player2SetScore);
 	}
 
+	public static String formatTieBreakScores(String player1GameScore, String player2GameScore, int player1SetScore,
+			int player2SetScore, int player1TieBreakScore, int player2TieBreakScore) {
+
+		return StringUtils.defaultString(
+				"Game Score -> "
+						+ player1GameScore + " - " + player2GameScore
+						+ " | Set Score -> " + player1SetScore + " - " + player2SetScore
+						+ " | Tie Break score -> " + player1TieBreakScore + " - " + player2TieBreakScore);
+	}
+
 	public static String translateScore(int score) {
 		switch (score) {
 		case 3:

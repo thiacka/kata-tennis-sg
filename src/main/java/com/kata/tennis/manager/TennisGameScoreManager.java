@@ -7,9 +7,11 @@ public class TennisGameScoreManager implements ITennisGameScoreManager {
 	private final TennisPlayer player1;
 	private int player1GameScore;
 	private int player1SetScore;
+	private int player1TieBreakScore;
 	private final TennisPlayer player2;
 	private int player2GameScore;
 	private int player2SetScore;
+	private int player2TieBreakScore;
 
 	public TennisGameScoreManager(TennisPlayer player1, TennisPlayer player2) {
 		super();
@@ -29,11 +31,25 @@ public class TennisGameScoreManager implements ITennisGameScoreManager {
 						this.player1SetScore, this.player2SetScore) + "\n" + winner.getName() + " wins the set";
 			}
 
+			if(hasTieBreakWinner()) {
+				updateSetScores();
+				resetGameScores();
+				resetTieBreakScores();
+
+				return ScoreUtils.formatTieBreakScores(ScoreUtils.translateScore(this.player1GameScore), ScoreUtils.translateScore(this.player2GameScore),
+						this.player1SetScore, this.player2SetScore, this.player1TieBreakScore, this.player2TieBreakScore) + "\n" + winner.getName() + " wins the set";
+			}
+
 			updateSetScores();
 			resetGameScores();
 
 			return ScoreUtils.formatScores(ScoreUtils.translateScore(this.player1GameScore), ScoreUtils.translateScore(this.player2GameScore),
 					this.player1SetScore, this.player2SetScore) + "\n" + winner.getName() + " wins the game";
+		}
+
+		if(IsTieBreak()) {
+			return ScoreUtils.formatTieBreakScores(ScoreUtils.translateScore(this.player1GameScore), ScoreUtils.translateScore(this.player2GameScore),
+					this.player1SetScore, this.player2SetScore, this.player1TieBreakScore, this.player2TieBreakScore);
 		}
 
 		if (isDEUCE()) {
@@ -53,11 +69,19 @@ public class TennisGameScoreManager implements ITennisGameScoreManager {
 	}
 
 	public void player1Win1Point() {
-		this.player1GameScore++;
+		if(IsTieBreakSetScore()) {
+			this.player1TieBreakScore++;
+		}else {
+			this.player1GameScore++;
+		}
 	}
 
 	public void player2Win1Point() {
-		this.player2GameScore++;
+		if(IsTieBreakSetScore()) {
+			this.player2TieBreakScore++;
+		}else {
+			this.player2GameScore++;
+		}
 	}
 
 	public String setGameScores(int player1GameScore, int player2GameScore) {
@@ -67,8 +91,16 @@ public class TennisGameScoreManager implements ITennisGameScoreManager {
 		return getScore();
 	}
 
+	public String setSetScores(int player1SetScore, int player2SetScore) {
+		this.player1SetScore = player1SetScore;
+		this.player2SetScore = player2SetScore;
+		resetGameScores();
+
+		return getScore();
+	}
+
 	private boolean hasWinner() {
-		return hasGameWinner() || hasSetWinner();
+		return hasGameWinner() || hasSetWinner() || hasTieBreakWinner();
 	}
 
 	private boolean hasSetWinner() {
@@ -92,8 +124,20 @@ public class TennisGameScoreManager implements ITennisGameScoreManager {
 		return this.player1GameScore >= 4 && this.player1GameScore == this.player2GameScore;
 	}
 
+	private boolean hasTieBreakWinner() {
+		return  IsTieBreak() && (this.player1TieBreakScore >= 7 || this.player2TieBreakScore >= 7);
+	}
+
+	private boolean IsTieBreak() {
+		return IsTieBreakSetScore() && (this.player1TieBreakScore > 0 || this.player2TieBreakScore > 0) ;
+	}
+
+	private boolean IsTieBreakSetScore() {
+		return this.player1SetScore == 6 &&  this.player1SetScore == this.player2SetScore;
+	}
+
 	private TennisPlayer getWinner() {
-		if ((this.player1GameScore > this.player2GameScore) || (this.player1SetScore > this.player2SetScore)) {
+		if ((this.player1GameScore > this.player2GameScore) || (this.player1SetScore > this.player2SetScore) || (this.player1TieBreakScore > this.player2TieBreakScore)) {
 			return this.player1;
 		}
 
@@ -105,8 +149,13 @@ public class TennisGameScoreManager implements ITennisGameScoreManager {
 		this.player2GameScore = 0;
 	}
 
+	private void resetTieBreakScores() {
+		this.player1TieBreakScore = 0;
+		this.player2TieBreakScore = 0;
+	}
+
 	private void updateSetScores() {
-		if (player1GameScore > player2GameScore) {
+		if ((player1GameScore > player2GameScore)|| (IsTieBreak() && this.player1TieBreakScore > this.player2TieBreakScore)) {
 			this.player1SetScore++;
 		} else {
 			this.player2SetScore++;
