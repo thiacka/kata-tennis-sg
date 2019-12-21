@@ -19,7 +19,7 @@ public class TennisGameScoreManagerTest {
 	{
 		final String score = scoreManager.getScore();
 
-		assertEquals("0 - 0", score);
+		assertEquals("Game Score -> 0 - 0 | Set Score -> 0 - 0", score);
 	}
 
 	@DisplayName("Player 1 wins 1 point And Player 2 win 0 point")
@@ -30,7 +30,7 @@ public class TennisGameScoreManagerTest {
 
 		final String score = scoreManager.getScore();
 
-		assertEquals("15 - 0", score);
+		assertEquals("Game Score -> 15 - 0 | Set Score -> 0 - 0", score);
 	}
 
 	@DisplayName("Player 1 wins 2 points And Player 2 win 0 point")
@@ -42,7 +42,7 @@ public class TennisGameScoreManagerTest {
 
 		final String score = scoreManager.getScore();
 
-		assertEquals("30 - 0", score);
+		assertEquals("Game Score -> 30 - 0 | Set Score -> 0 - 0", score);
 	}
 
 	@DisplayName("Player 1 wins 2 points and Player 2 wins 1 point")
@@ -55,7 +55,7 @@ public class TennisGameScoreManagerTest {
 
 		final String score = scoreManager.getScore();
 
-		assertEquals("30 - 15", score);
+		assertEquals("Game Score -> 30 - 15 | Set Score -> 0 - 0", score);
 	}
 
 	@DisplayName("Player 1 wins 3 points and Player 2 wins 1 point")
@@ -69,7 +69,7 @@ public class TennisGameScoreManagerTest {
 
 		final String score = scoreManager.getScore();
 
-		assertEquals("40 - 15", score);
+		assertEquals("Game Score -> 40 - 15 | Set Score -> 0 - 0", score);
 	}
 
 	@DisplayName("Player 1 wins 3 points and Player 2 wins 2 points")
@@ -84,7 +84,7 @@ public class TennisGameScoreManagerTest {
 
 		final String score = scoreManager.getScore();
 
-		assertEquals("40 - 30", score);
+		assertEquals("Game Score -> 40 - 30 | Set Score -> 0 - 0", score);
 	}
 
 	@DisplayName("Player 1 wins 3 points and Player 2 wins 3 points")
@@ -100,7 +100,7 @@ public class TennisGameScoreManagerTest {
 
 		final String score = scoreManager.getScore();
 
-		assertEquals("40 - 40", score);
+		assertEquals("Game Score -> 40 - 40 | Set Score -> 0 - 0", score);
 	}
 
 	@DisplayName("ADV rule : Player 1 wins 3 points and Player 2 wins 4 points and get ADV")
@@ -117,7 +117,7 @@ public class TennisGameScoreManagerTest {
 
 		final String score = scoreManager.getScore();
 
-		assertEquals("40 - ADV", score);
+		assertEquals("Game Score -> 40 - ADV | Set Score -> 0 - 0", score);
 	}
 
 	@DisplayName("DEUCE rule: Player 1 wins 4 points and Player 2 wins 4 point")
@@ -135,7 +135,7 @@ public class TennisGameScoreManagerTest {
 
 		final String score = scoreManager.getScore();
 
-		assertEquals("DEUCE - DEUCE", score);
+		assertEquals("Game Score -> DEUCE - DEUCE | Set Score -> 0 - 0", score);
 	}
 
 	@DisplayName("Player 1 wins 5 points and get ADV and Player 2 wins 4 point")
@@ -154,7 +154,7 @@ public class TennisGameScoreManagerTest {
 
 		final String score = scoreManager.getScore();
 
-		assertEquals("ADV - 40", score);
+		assertEquals("Game Score -> ADV - 40 | Set Score -> 0 - 0", score);
 	}
 
 	@DisplayName("Player 1 wins 6 points and Player 2 wins 4 point")
@@ -174,6 +174,98 @@ public class TennisGameScoreManagerTest {
 
 		final String score = scoreManager.getScore();
 
-		assertEquals("0 - 0\nPlayer 1 win the game", score);
+		assertEquals("Game Score -> 0 - 0 | Set Score -> 1 - 0\nPlayer 1 wins the game", score);
+	}
+
+	@DisplayName("Player 1 wins 1 Set and Player 2 wins 1 Set")
+	@Test
+	public void testPlayer1Wins1SetAndPlayer2Wins1Set()
+	{
+
+		scoreManager.setGameScores(6, 3);
+		scoreManager.setGameScores(5, 7);
+
+		final String score = scoreManager.getScore();
+
+		assertEquals("Game Score -> 0 - 0 | Set Score -> 1 - 1", score);
+	}
+
+	@DisplayName("Player 1 wins 1 Set and Player 2 wins 2 Set")
+	@Test
+	public void testPlayer1Wins1SetAndPlayer2Wins2Set()
+	{
+
+		scoreManager.setGameScores(6, 3);
+		scoreManager.setGameScores(5, 7);
+		scoreManager.setGameScores(3, 6);
+
+		final String score = scoreManager.getScore();
+
+		assertEquals("Game Score -> 0 - 0 | Set Score -> 1 - 2", score);
+	}
+
+	@DisplayName("Player 1 wins 1 Set and Player 2 wins 3 Set")
+	@Test
+	public void testPlayer1Wins1SetAndPlayer2Wins3Set()
+	{
+
+		scoreManager.setGameScores(6, 3);
+		scoreManager.setGameScores(5, 7);
+		scoreManager.setGameScores(3, 6);
+		scoreManager.setGameScores(1, 6);
+
+		final String score = scoreManager.getScore();
+
+		assertEquals("Game Score -> 0 - 0 | Set Score -> 1 - 3", score);
+	}
+
+	@DisplayName("Player 1 wins 1 Set and Player 2 wins 4 Set")
+	@Test
+	public void testPlayer1Wins1SetAndPlayer2Wins4Set()
+	{
+
+		scoreManager.setGameScores(6, 3);
+		scoreManager.setGameScores(5, 7);
+		scoreManager.setGameScores(3, 6);
+		scoreManager.setGameScores(1, 6);
+		scoreManager.setGameScores(5, 7);
+
+		final String score = scoreManager.getScore();
+
+		assertEquals("Game Score -> 0 - 0 | Set Score -> 1 - 4", score);
+	}
+	@DisplayName("Player 1 wins 1 Set and Player 2 wins 4 Set")
+	@Test
+	public void testPlayer1Wins1SetAndPlayer2Wins5Set()
+	{
+
+		scoreManager.setGameScores(6, 3);
+		scoreManager.setGameScores(5, 7);
+		scoreManager.setGameScores(3, 6);
+		scoreManager.setGameScores(1, 6);
+		scoreManager.setGameScores(5, 7);
+		scoreManager.setGameScores(5, 7);
+
+		final String score = scoreManager.getScore();
+
+		assertEquals("Game Score -> 0 - 0 | Set Score -> 1 - 5", score);
+	}
+
+	@DisplayName("Player 1 wins 1 Set and Player 2 wins 6 Set")
+	@Test
+	public void testPlayer1Wins1SetAndPlayer2Wins6Set()
+	{
+
+		scoreManager.setGameScores(6, 3);
+		scoreManager.setGameScores(5, 7);
+		scoreManager.setGameScores(3, 6);
+		scoreManager.setGameScores(1, 6);
+		scoreManager.setGameScores(5, 7);
+		scoreManager.setGameScores(5, 7);
+		scoreManager.setGameScores(1, 6);
+
+		final String score = scoreManager.getScore();
+
+		assertEquals("Game Score -> 0 - 0 | Set Score -> 1 - 6\nPlayer 2 wins the set", score);
 	}
 }

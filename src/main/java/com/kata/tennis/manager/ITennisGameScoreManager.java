@@ -8,4 +8,5 @@ public interface ITennisGameScoreManager {
 
 	public void player2Win1Point();
 
+	public String setGameScores(int player1GameScore, int player2GameScore);
 }

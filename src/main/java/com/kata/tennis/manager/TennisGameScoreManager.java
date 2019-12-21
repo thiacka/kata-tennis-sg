@@ -1,14 +1,15 @@
 package com.kata.tennis.manager;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.kata.tennis.model.TennisPlayer;
+import com.kata.tennis.utils.ScoreUtils;
 
 public class TennisGameScoreManager implements ITennisGameScoreManager {
 	private final TennisPlayer player1;
 	private int player1GameScore;
+	private int player1SetScore;
 	private final TennisPlayer player2;
 	private int player2GameScore;
+	private int player2SetScore;
 
 	public TennisGameScoreManager(TennisPlayer player1, TennisPlayer player2) {
 		super();
@@ -19,21 +20,36 @@ public class TennisGameScoreManager implements ITennisGameScoreManager {
 	public String getScore() {
 		if (hasWinner()) {
 			final TennisPlayer winner = getWinner();
-			winner.isTheWinner();
+
+			if (hasSetWinner()) {
+				winner.isTheWinner();
+				resetGameScores();
+
+				return ScoreUtils.formatScores(ScoreUtils.translateScore(this.player1GameScore), ScoreUtils.translateScore(this.player2GameScore),
+						this.player1SetScore, this.player2SetScore) + "\n" + winner.getName() + " wins the set";
+			}
+
+			updateSetScores();
 			resetGameScores();
-			return StringUtils.defaultString(translateScore(this.player1GameScore) + " - " + translateScore(this.player2GameScore)) + "\n" + winner.getName() + " win the game";
+
+			return ScoreUtils.formatScores(ScoreUtils.translateScore(this.player1GameScore), ScoreUtils.translateScore(this.player2GameScore),
+					this.player1SetScore, this.player2SetScore) + "\n" + winner.getName() + " wins the game";
 		}
 
 		if (isDEUCE()) {
-			return StringUtils.defaultString("DEUCE - DEUCE");
+			return ScoreUtils.formatScores("DEUCE", "DEUCE", this.player1SetScore, this.player2SetScore);
 		}
 
 		if (IsADV()) {
-			return this.player1GameScore > this.player2GameScore ? StringUtils.defaultString("ADV - 40")
-					: StringUtils.defaultString("40 - ADV");
+			if (this.player1GameScore > this.player2GameScore) {
+				return ScoreUtils.formatScores("ADV", "40", this.player1SetScore, this.player2SetScore);
+			}
+
+			return ScoreUtils.formatScores("40", "ADV", this.player1SetScore, this.player2SetScore);
 		}
 
-		return StringUtils.defaultString(translateScore(this.player1GameScore) + " - " + translateScore(this.player2GameScore));
+		return ScoreUtils.formatScores(ScoreUtils.translateScore(this.player1GameScore), ScoreUtils.translateScore(this.player2GameScore),
+				this.player1SetScore, this.player2SetScore);
 	}
 
 	public void player1Win1Point() {
@@ -44,10 +60,27 @@ public class TennisGameScoreManager implements ITennisGameScoreManager {
 		this.player2GameScore++;
 	}
 
-	private boolean hasWinner() {
+	public String setGameScores(int player1GameScore, int player2GameScore) {
+		this.player1GameScore = player1GameScore;
+		this.player2GameScore = player2GameScore;
 
-		return (this.player1GameScore >= 4 && this.player1GameScore >= this.player2GameScore + 2
-				|| this.player2GameScore >= 4 && this.player2GameScore >= this.player1GameScore + 2);
+		return getScore();
+	}
+
+	private boolean hasWinner() {
+		return hasGameWinner() || hasSetWinner();
+	}
+
+	private boolean hasSetWinner() {
+		return (this.player1SetScore == 6 && this.player2SetScore <= 4)
+				|| (this.player2SetScore == 6 && this.player1SetScore <= 4)
+				|| this.player1SetScore == 7
+				|| this.player2SetScore == 7;
+	}
+
+	private boolean hasGameWinner() {
+		return (this.player1GameScore >= 4 && this.player1GameScore >= this.player2GameScore + 2)
+				|| (this.player2GameScore >= 4 && this.player2GameScore >= this.player1GameScore + 2);
 	}
 
 	private boolean IsADV() {
@@ -60,7 +93,7 @@ public class TennisGameScoreManager implements ITennisGameScoreManager {
 	}
 
 	private TennisPlayer getWinner() {
-		if (this.player1GameScore > this.player2GameScore) {
+		if ((this.player1GameScore > this.player2GameScore) || (this.player1SetScore > this.player2SetScore)) {
 			return this.player1;
 		}
 
@@ -72,18 +105,13 @@ public class TennisGameScoreManager implements ITennisGameScoreManager {
 		this.player2GameScore = 0;
 	}
 
-	private int translateScore(int score) {
-		switch (score) {
-		case 3:
-			return 40;
-		case 2:
-			return 30;
-		case 1:
-			return 15;
-		case 0:
-			return 0;
+	private void updateSetScores() {
+		if (player1GameScore > player2GameScore) {
+			this.player1SetScore++;
+		} else {
+			this.player2SetScore++;
 		}
-		throw new IllegalArgumentException("Illegal score: " + score);
+
 	}
 
 }
